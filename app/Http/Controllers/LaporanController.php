@@ -2,85 +2,129 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BarangExport;
 use App\Models\Peminjaman;
+use App\Models\Barang;
 use Illuminate\Http\Request;
 use PDF;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\PeminjamanExport;
-use App\Models\Barang;
+use App\Exports\PengembalianExport;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class LaporanController extends Controller
 {
+    // 🔷 Laporan Peminjaman
     public function index(Request $request)
     {
-        // Filter berdasarkan tanggal dan status
         $peminjamans = Peminjaman::with('barang')
-            ->when($request->filled('tanggal_mulai'), function ($query) use ($request) {
-                $query->where('tanggal_pinjam', '>=', $request->tanggal_mulai);
-            })
-            ->when($request->filled('tanggal_akhir'), function ($query) use ($request) {
-                $query->where('tanggal_pinjam', '<=', $request->tanggal_akhir);
-            })
-            ->when($request->filled('status'), function ($query) use ($request) {
-                $query->where('status', $request->status);
-            })
+            ->where('status', 'Dipinjam',)
+            ->when($request->filled('tanggal_mulai'), fn($q) => $q->where('tanggal_pinjam', '>=', $request->tanggal_mulai))
+            ->when($request->filled('tanggal_akhir'), fn($q) => $q->where('tanggal_pinjam', '<=', $request->tanggal_akhir))
             ->get();
 
         return view('laporan.index', compact('peminjamans'));
     }
 
-    public function exportPDF(Request $request)
+    public function exportPeminjamanPDF(Request $request)
     {
         $peminjamans = Peminjaman::with('barang')
-            ->when($request->filled('tanggal_mulai'), function ($query) use ($request) {
-                $query->where('tanggal_pinjam', '>=', $request->tanggal_mulai);
-            })
-            ->when($request->filled('tanggal_akhir'), function ($query) use ($request) {
-                $query->where('tanggal_pinjam', '<=', $request->tanggal_akhir);
-            })
-            ->when($request->filled('status'), function ($query) use ($request) {
-                $query->where('status', $request->status);
-            })
+            ->where('status', 'Dipinjam')
+            ->when($request->filled('tanggal_mulai'), fn($q) => $q->where('tanggal_pinjam', '>=', $request->tanggal_mulai))
+            ->when($request->filled('tanggal_akhir'), fn($q) => $q->where('tanggal_pinjam', '<=', $request->tanggal_akhir))
             ->get();
 
-        $barangs = Barang::with('kategori')->get(); // ⬅️ Tambahkan ini
-
-        $pdf = FacadePdf::loadView('laporan.pdf', compact('peminjamans', 'barangs'))
+        $pdf = FacadePdf::loadView('laporan.pdf', compact('peminjamans'))
             ->setPaper('a4', 'landscape');
 
-        return $pdf->download('laporan-peminjaman-dan-barang.pdf');
+        return $pdf->download('laporan-peminjaman.pdf');
     }
 
-
-    public function exportExcel(Request $request)
+    public function exportPeminjamanExcel(Request $request)
     {
         $peminjamans = Peminjaman::with('barang')
-            ->when($request->filled('tanggal_mulai'), function ($query) use ($request) {
-                $query->where('tanggal_pinjam', '>=', $request->tanggal_mulai);
-            })
-            ->when($request->filled('tanggal_akhir'), function ($query) use ($request) {
-                $query->where('tanggal_pinjam', '<=', $request->tanggal_akhir);
-            })
-            ->when($request->filled('status'), function ($query) use ($request) {
-                $query->where('status', $request->status);
-            })
+            ->where('status', 'Dipinjam')
+            ->when($request->filled('tanggal_mulai'), fn($q) => $q->where('tanggal_pinjam', '>=', $request->tanggal_mulai))
+            ->when($request->filled('tanggal_akhir'), fn($q) => $q->where('tanggal_pinjam', '<=', $request->tanggal_akhir))
             ->get();
 
         return Excel::download(new PeminjamanExport($peminjamans), 'laporan-peminjaman.xlsx');
     }
 
+    // 🔷 Laporan Pengembalian
+    public function pengembalian(Request $request)
+    {
+        $pengembalians = Peminjaman::with('barang')
+            ->where('status', 'Dikembalikan')
+            ->when($request->filled('tanggal_mulai'), fn($q) => $q->where('tanggal_kembali', '>=', $request->tanggal_mulai))
+            ->when($request->filled('tanggal_akhir'), fn($q) => $q->where('tanggal_kembali', '<=', $request->tanggal_akhir))
+            ->get();
+
+        return view('laporan.pengembalian', compact('pengembalians'));
+    }
+
+    public function exportPengembalianPDF(Request $request)
+    {
+        $pengembalians = Peminjaman::with('barang')
+            ->where('status', 'Dikembalikan')
+            ->when($request->filled('tanggal_mulai'), fn($q) => $q->where('tanggal_kembali', '>=', $request->tanggal_mulai))
+            ->when($request->filled('tanggal_akhir'), fn($q) => $q->where('tanggal_kembali', '<=', $request->tanggal_akhir))
+            ->get();
+
+        $pdf = FacadePdf::loadView('laporan.pdf', compact('pengembalians'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-pengembalian.pdf');
+    }
+
+    public function exportPengembalianExcel(Request $request)
+    {
+        $pengembalians = Peminjaman::with('barang')
+            ->where('status', 'Dikembalikan')
+            ->when($request->filled('tanggal_mulai'), fn($q) => $q->where('tanggal_kembali', '>=', $request->tanggal_mulai))
+            ->when($request->filled('tanggal_akhir'), fn($q) => $q->where('tanggal_kembali', '<=', $request->tanggal_akhir))
+            ->get();
+
+        return Excel::download(new PengembalianExport($pengembalians), 'laporan.pengembalian.xlsx');
+    }
+
+    // 🔷 Laporan Barang
     public function laporanBarang(Request $request)
     {
-        $query = Barang::with('kategori');
-
-        // Filter jika ingin pakai tanggal (optional, berdasarkan created_at misalnya)
-        if ($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir')) {
-            $query->whereBetween('created_at', [$request->tanggal_mulai, $request->tanggal_akhir]);
-        }
-
-        $barangs = $query->get();
+        $barangs = Barang::with('kategori')
+            ->when($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir'), function ($q) use ($request) {
+                $q->whereBetween('created_at', [$request->tanggal_mulai, $request->tanggal_akhir]);
+            })
+            ->get();
 
         return view('laporan.barang', compact('barangs'));
     }
+
+    public function exportBarangPDF(Request $request)
+    {
+        $barangs = Barang::with('kategori')
+            ->when($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir'), function ($q) use ($request) {
+                $q->whereBetween('created_at', [$request->tanggal_mulai, $request->tanggal_akhir]);
+            })
+            ->get();
+
+        $pdf = FacadePdf::loadView('laporan.pdf', compact('barangs'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-barang.pdf');
+    }
+
+
+public function exportBarangExcel(Request $request)
+{
+    $barangs = Barang::with('kategori')
+        ->when($request->filled('tanggal_mulai') && $request->filled('tanggal_akhir'), function ($q) use ($request) {
+            $q->whereBetween('created_at', [$request->tanggal_mulai, $request->tanggal_akhir]);
+        })
+        ->get();
+
+    return Excel::download(new BarangExport($barangs), 'laporan-barang.xlsx');
 }
+}
+
+

@@ -29,5 +29,7 @@ class BarangExport implements FromCollection, WithHeadings
     {
         return ['Kategori', 'Nama Barang', 'Jumlah'];
     }
+
+    
 }
 

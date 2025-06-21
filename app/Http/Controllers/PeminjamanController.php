@@ -11,7 +11,7 @@ class PeminjamanController extends Controller
    public function index()
 {
     $peminjamans = Peminjaman::with('barang')
-        ->whereIn('status', ['none', 'dipinjam'])
+        ->whereIn('status', ['none', 'dipinjam', 'pending'])
          ->paginate(5);
 
 

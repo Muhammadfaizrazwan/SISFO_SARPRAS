@@ -1,31 +1,44 @@
 @extends('layouts.app')
 
+@push('styles')
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+@endpush
+
 @section('title', 'Laporan Barang')
 
 @section('content')
-    <div class="container">
-        <h2 class="mb-4">Laporan Barang</h2>
+<div class="container animate__animated animate__fadeIn">
+    <h2 class="mb-4 d-flex align-items-center gap-2">
+        <i class="fas fa-boxes"></i>
+        Laporan Barang
+    </h2>
 
-        <form method="GET" action="{{route('laporanBarang.exportPDF') }}" class="mb-4">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-3">
-                    <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
-                    <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control"
-                        value="{{ request('tanggal_mulai') }}">
-                </div>
-                <div class="col-md-3">
-                    <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
-                    <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control"
-                        value="{{ request('tanggal_akhir') }}">
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary">Filter</button>
-                </div>
+    <form method="GET" action="{{ route('laporan.barang.pdf') }}" class="mb-4 p-3 bg-light rounded shadow-sm">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+                <input type="date" name="tanggal_mulai" id="tanggal_mulai" class="form-control"
+                       value="{{ request('tanggal_mulai') }}">
             </div>
-        </form>
+            <div class="col-md-3">
+                <label for="tanggal_akhir" class="form-label">Tanggal Akhir</label>
+                <input type="date" name="tanggal_akhir" id="tanggal_akhir" class="form-control"
+                       value="{{ request('tanggal_akhir') }}">
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-filter me-1"></i>Filter
+                </button>
+            </div>
+        </div>
+    </form>
 
-        <table class="table table-striped">
-            <thead>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-primary">
                 <tr>
                     <th>#</th>
                     <th>Kategori</th>
@@ -38,27 +51,32 @@
                 @foreach ($barangs as $barang)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $barang->kategori->nama_kategori }}</td>
+                        <td>{{ $barang->kategori->nama_kategori }}</td> <!-- Removed badge -->
                         <td>{{ $barang->nama_barang }}</td>
                         <td>{{ $barang->jumlah }}</td>
                         <td>
                             @if ($barang->gambar)
-                                <img src="{{ asset('storage/' . $barang->gambar) }}" alt="{{ $barang->nama_barang }}"
-                                    width="60">
+                                <img src="{{ asset('storage/' . $barang->gambar) }}"
+                                     alt="{{ $barang->nama_barang }}"
+                                     class="img-thumbnail"
+                                     style="width: 60px; height: auto;">
                             @else
-                                <span class="text-muted">Tidak ada</span>
+                                <span class="text-muted fst-italic">Tidak ada</span>
                             @endif
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-
-
-        <div class="mt-4">
-          <a href="{{ route('laporanBarang.exportPDF') }}" class="btn btn-danger">Export PDF</a>
-<a href="{{ route('laporanBarang.exportExcel') }}" class="btn btn-success">Export Excel</a>
-
-        </div>
     </div>
+
+    <div class="mt-4 d-flex gap-2">
+        <a href="{{ route('laporan.barang.pdf') }}" class="btn btn-secondary">
+            <i class="fas fa-file-pdf me-1"></i>Download PDF Barang
+        </a>
+        <a href="{{ route('laporan.barang.excel') }}" class="btn btn-success shadow-sm">
+            <i class="fas fa-file-excel me-1"></i>Export Excel
+        </a>
+    </div>
+</div>
 @endsection

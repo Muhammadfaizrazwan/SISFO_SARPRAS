@@ -63,6 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::apiResource('peminjaman', PeminjamanApiController::class);
 
 
+Route::post('/peminjaman', [PeminjamanController::class, 'store']);
 
 
 // api.php
@@ -71,3 +72,11 @@ Route::post('/pengembalian/{id}', [PengembalianApiController::class, 'store']);
 
 Route::post('/pengembalian', [PengembalianController::class, 'storeApi']);
 
+
+Route::get('/pengembalian', [PengembalianAPIController::class, 'index']);
+Route::post('/pengembalian/{id}', [PengembalianAPIController::class, 'store']);
+Route::post('/pengembalian/tolak', [PengembalianAPIController::class, 'tolak']); // ✅ baru
+
+Route::get('/pengembalian', [PengembalianApiController::class, 'index']);
+Route::post('/pengembalian/{id}', [PengembalianApiController::class, 'store']);
+Route::post('/pengembalian/tolak', [PengembalianApiController::class, 'tolak']);

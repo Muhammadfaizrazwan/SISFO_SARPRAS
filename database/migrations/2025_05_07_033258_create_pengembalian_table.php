@@ -13,6 +13,8 @@ class CreatePengembalianTable extends Migration
             $table->foreignId('peminjaman_id')->constrained('peminjaman');
             $table->date('tanggal_pengembalian');
             $table->text('keterangan')->nullable();
+             $table->string('kondisi_barang')->nullable();
+             $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

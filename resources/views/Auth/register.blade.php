@@ -2,154 +2,347 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Register User</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(to bottom, #ffffff, #0000ff);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Register User</title>
 
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 350px;
-            text-align: center;
-        }
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-        .form-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: black;
-        }
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .form-label {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
+    .main-container {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+      display: flex;
+      overflow: hidden;
+      width: 800px;
+      max-width: 98vw;
+      min-height: 480px;
+      animation: fadeIn 1s;
+    }
 
-        .form-label i {
-            margin-right: 8px;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
 
-        .form-control, .form-select {
-            background: #eee;
-            border: none;
-            border-radius: 15px;
-            padding: 10px 15px;
-            font-size: 14px;
-        }
+    .left-anim {
+      background: linear-gradient(135deg, #667eea 60%, #764ba2 100%);
+      flex: 1.2;
+      min-width: 0;
+      min-height: 480px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-        .form-control:focus, .form-select:focus {
-            background: #e0e0e0;
-            box-shadow: none;
-            border-color: transparent;
-        }
+    .right-form {
+      flex: 1;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
 
-        .btn-primary {
-            background: grey;
-            border: none;
-            border-radius: 15px;
-            padding: 10px;
-            margin-top: 20px;
-            font-size: 16px;
-            width: 100%;
-        }
+    @media (max-width: 900px) {
+      .main-container { width: 98vw; }
+    }
 
-        .btn-primary:hover {
-            background: #6a11cb;
-        }
+    @media (max-width: 700px) {
+      .main-container { flex-direction: column; width: 98vw; min-height: unset;}
+      .left-anim { min-height: 180px; height: 180px;}
+      .right-form { padding: 28px 12px; }
+    }
 
-        .form-footer {
-            font-size: 12px;
-            margin-top: 15px;
-        }
+    .form-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #333;
+    }
 
-        .form-footer a {
-            color: blue;
-            text-decoration: none;
-        }
+    .form-subtitle {
+      font-size: 17px;
+      color: #555;
+      margin-bottom: 25px;
+    }
 
-        .form-footer a:hover {
-            text-decoration: underline;
-        }
+    .form-group {
+      position: relative;
+      margin-bottom: 18px;
+    }
 
-        .alert {
-            font-size: 14px;
-            padding: 10px;
-            margin-bottom: 15px;
-        }
-    </style>
+    .form-control {
+      background: #f0f0f0;
+      border: none;
+      border-radius: 18px;
+      padding: 12px 45px 12px 15px;
+      font-size: 14px;
+    }
+
+    .form-control:focus {
+      background: #e6e6e6;
+      box-shadow: none;
+    }
+
+    .form-group i {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+    }
+
+    .form-group .fa-user,
+    .form-group .fa-envelope,
+    .form-group .fa-lock {
+      left: 15px;
+      font-size: 16px;
+    }
+
+    .toggle-password {
+      right: 15px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: color 0.3s;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #777;
+      opacity: 0.7;
+    }
+
+    .toggle-password:hover {
+      opacity: 1;
+      color: #6a11cb;
+      transform: translateY(-50%) scale(1.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #667eea, #764ba2);
+      border: none;
+      border-radius: 18px;
+      padding: 12px;
+      font-size: 16px;
+      width: 100%;
+      margin-top: 10px;
+      color: white;
+      transition: background 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(to right, #5a67d8, #6b46c1);
+    }
+
+    .form-footer {
+      font-size: 13px;
+      margin-top: 18px;
+    }
+
+    .form-footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .form-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .alert {
+      font-size: 14px;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+
+    /* Animasi bola-bola */
+    .balls-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+      top: 0; left: 0;
+      z-index: 1;
+    }
+    .anim-content {
+      position: absolute;
+      z-index: 2;
+      width: 100%;
+      top: 0; left: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      letter-spacing: 1px;
+      pointer-events: none;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.13);
+    }
+    .anim-content h1 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+    .anim-content p {
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="form-container">
-        <h2 class="form-title">SISFO SARPRAS</h2>
 
-        <h5 class="mb-3">Register</h5>
-
-        @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-        @endif
-
-        @if($errors->any())
-        <div class="alert alert-danger">
-            <ul class="mb-0">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-
-        <form action="{{ route('actionregister') }}" method="post">
-            @csrf
-            <div class="mb-3">
-                <input type="text" name="name" id="name" class="form-control" placeholder="Username" required>
-            </div>
-            <div class="mb-3">
-                <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
-            </div>
-            <div class="mb-3">
-                <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
-            </div>
-            <div class="mb-3">
-                <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Register</button>
-
-            <div class="form-footer">
-                Already have an Account? <a href="{{ route('login') }}">Login</a>
-            </div>
-        </form>
+  <div class="main-container">
+    <!-- Kotak Kiri: Animasi -->
+    <div class="left-anim">
+      <canvas class="balls-canvas"></canvas>
+      <div class="anim-content">
+        <h1>SISFO SARPRAS</h1>
+        <p>Daftar akun baru</p>
+      </div>
     </div>
+    <!-- Kotak Kanan: Form Register -->
+    <div class="right-form">
+      <h2 class="form-title">Register</h2>
+      <h5 class="form-subtitle">Buat akun SISFO SARPRAS</h5>
 
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+      @if(session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+      @endif
+
+      @if($errors->any())
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+      @endif
+
+      <form action="{{ route('actionregister') }}" method="post">
+        @csrf
+
+        <div class="form-group">
+          <input type="text" name="name" id="name" class="form-control" placeholder="Username" required>
+        </div>
+
+        <div class="form-group">
+          <input type="email" name="email" id="email" class="form-control" placeholder="Email" required>
+        </div>
+
+        <div class="form-group">
+          <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+          <i class="fa fa-eye toggle-password" toggle="#password"></i>
+        </div>
+
+        <div class="form-group">
+          <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="Confirm Password" required>
+          <i class="fa fa-eye toggle-password" toggle="#password_confirmation"></i>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register</button>
+
+        <div class="form-footer">
+          Sudah punya akun? <a href="{{ route('login') }}">Login</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Show/Hide Password -->
+  <script>
+    const toggleIcons = document.querySelectorAll('.toggle-password');
+    toggleIcons.forEach(icon => {
+      icon.addEventListener('click', function () {
+        const input = document.querySelector(this.getAttribute('toggle'));
+        const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+        input.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+      });
+    });
+  </script>
+
+  <!-- Animasi Bola-bola Bergerak -->
+  <script>
+    // Simple animated balls
+    const canvas = document.querySelector('.balls-canvas');
+    const ctx = canvas.getContext('2d');
+    let balls = [];
+    function resizeCanvas() {
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function randomColor() {
+      const colors = ['#fff', '#e0e7ff', '#c3aed6', '#a3cef1', '#667eea', '#764ba2', '#7f53ac'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+    function createBalls(n) {
+      balls = [];
+      for (let i = 0; i < n; i++) {
+        balls.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: 18 + Math.random() * 22,
+          dx: (Math.random() - 0.5) * 1.6,
+          dy: (Math.random() - 0.5) * 1.6,
+          color: randomColor(),
+          alpha: 0.4 + Math.random() * 0.5
+        });
+      }
+    }
+    function animateBalls() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let ball of balls) {
+        ctx.globalAlpha = ball.alpha;
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+        ctx.fillStyle = ball.color;
+        ctx.fill();
+        ball.x += ball.dx;
+        ball.y += ball.dy;
+        if (ball.x < -ball.r) ball.x = canvas.width + ball.r;
+        if (ball.x > canvas.width + ball.r) ball.x = -ball.r;
+        if (ball.y < -ball.r) ball.y = canvas.height + ball.r;
+        if (ball.y > canvas.height + ball.r) ball.y = -ball.r;
+      }
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(animateBalls);
+    }
+    function startAnim() {
+      resizeCanvas();
+      createBalls(window.innerWidth < 700 ? 8 : 14);
+      animateBalls();
+    }
+    startAnim();
+    window.addEventListener('resize', startAnim);
+  </script>
 </body>
-
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
 </html>
